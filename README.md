@@ -4,7 +4,7 @@
 
 ### Build Raspberry Pi OS (Arm64)
 
-Tag format: `build-raspios-arm64-*`
+Tag format: `build-raspios-arm64_*`
 
 ```bash
 BUILD_TAG="build-raspios-arm64_"$(date +'%Y-%m-%d')"-update"
