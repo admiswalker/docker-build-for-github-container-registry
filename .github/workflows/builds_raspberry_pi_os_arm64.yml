@@ -45,6 +45,7 @@ jobs:
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           
       - name: Check the docker base image existance
+        continue-on-error: true # Not to spot at "docker manifest inspect ${URI}:${TAG} 2>/dev/null", if there is No image.
         run: |
           URI=${{ env.REGISTRY }}/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}
           TAG="orig"
