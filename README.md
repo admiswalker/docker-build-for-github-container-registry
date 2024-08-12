@@ -49,6 +49,7 @@ denied: installation not allowed to Write organization package
 ```
 
 Ref:
+- [Publishing Docker images](https://docs.github.com/ja/actions/use-cases-and-examples/publishing-packages/publishing-docker-images#publishing-images-to-github-packages)
 - [GitHub Action で GHCR へのコンテナー イメージの Push が成功しない (permission_denied: write_package)](https://blog.yukirii.dev/github-action-ghcr-push-error/)
 - [GitHub Container Registry に自作の Docker イメージを公開する](https://zenn.dev/515hikaru/articles/migrate-to-ghcr)
 
