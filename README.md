@@ -8,10 +8,10 @@
    1. 「Personal access tokens」→「Tokens (classic)」をクリック
    1. 「[新しいトークンの生成] をクリック」
    1. 下記にチェック
-      ✅ workflow
-      ✅ write:packages
-        ✅ read:packages
-      ✅ delete:packages
+      - ✅ workflow
+      - ✅ write:packages
+        - ✅ read:packages
+      - ✅ delete:packages
    Note: Token は後から参照できないので，適切な場所に控えておく．紛失した際の影響を減らすため 7 日程度の短い期間を設定しておく
    Ref: [personal access token (classic) の作成](https://docs.github.com/ja/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-token-classic-%E3%81%AE%E4%BD%9C%E6%88%90)
 1. ghcrにログイン
