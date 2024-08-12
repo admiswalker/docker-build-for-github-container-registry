@@ -12,7 +12,7 @@
       ✅ write:packages
         ✅ read:packages
       ✅ delete:packages
-   Note: Token は後から参照できないので，適切な場所に控えておく
+   Note: Token は後から参照できないので，適切な場所に控えておく．紛失した際の影響を減らすため 7 日程度の短い期間を設定しておく
    Ref: [personal access token (classic) の作成](https://docs.github.com/ja/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-token-classic-%E3%81%AE%E4%BD%9C%E6%88%90)
 1. ghcrにログイン
    ```bash
@@ -35,8 +35,20 @@ Ref:
 
 ## GitHub Actions
 
+手動で Docker image を push すると，GitHub の Packages の画面に Docker リポジトリの管理画面が表示されるようになるので，下記を実施する．
+1. デフォルトだと Private なので，Public 公開に変更しておく（今回は見られて困らないデータのため，制限のない Public にした方がよい）
+1. 管理画面から GitHub Actions で自動 Build & Push するリポジトリに Write 権限を付与する．
 
+なお，権限がないと下記のエラーが出る．
+
+```bash
+docker push ghcr.io/admiswalker/raspios_full_arm64_2022-04-04_bullseye:2024-08-12-update-tmp
+```
+```bash
+denied: installation not allowed to Write organization package
+```
 
 Ref:
+- [GitHub Action で GHCR へのコンテナー イメージの Push が成功しない (permission_denied: write_package)](https://blog.yukirii.dev/github-action-ghcr-push-error/)
 - [GitHub Container Registry に自作の Docker イメージを公開する](https://zenn.dev/515hikaru/articles/migrate-to-ghcr)
 
