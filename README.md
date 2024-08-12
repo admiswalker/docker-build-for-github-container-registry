@@ -8,6 +8,7 @@ Tag format: `build-raspios-arm64-*`
 
 ```bash
 BUILD_TAG="build-raspios-arm64_"$(date +'%Y-%m-%d')"-update"
+echo ${BUILD_TAG}
 git tag -a ${BUILD_TAG} -m ${BUILD_TAG} [CommitHash]
 git push origin ${BUILD_TAG}
 ```

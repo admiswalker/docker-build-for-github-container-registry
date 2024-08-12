@@ -2,7 +2,7 @@ name: Build Raspberry Pi Docker (arm64)
 
 on:
   push:
-    branches: [ main, dev, develop ]
+#    branches: [ main, dev, develop ]
     tags:
       - "build-raspios-arm64-*"
 #  pull_request:
