@@ -1,6 +1,33 @@
 # docker-build-for-github-container-registry
 
-## 手動手順
+## Usage
+
+### Build Raspberry Pi OS (Arm64)
+
+Tag format: `build-raspios-arm64-*`
+
+```bash
+BUILD_TAG="build-raspios-arm64_"$(date +'%Y-%m-%d')"-update"
+git tag -a ${BUILD_TAG} -m ${BUILD_TAG} [CommitHash]
+git push origin ${BUILD_TAG}
+```
+
+Note: In a GitHub Actions, the version tag is extracted by the following process:
+```bash
+VERSION=$(echo ${BUILD_TAG} | awk -F _ '{ print $2 }')
+echo ${VERSION}
+```
+
+## Ref
+
+- [Publishing Docker images](https://docs.github.com/ja/actions/use-cases-and-examples/publishing-packages/publishing-docker-images#publishing-images-to-github-packages)
+- [GitHub Action で GHCR へのコンテナー イメージの Push が成功しない (permission_denied: write_package)](https://blog.yukirii.dev/github-action-ghcr-push-error/)
+- [GitHub Container Registry に自作の Docker イメージを公開する](https://zenn.dev/515hikaru/articles/migrate-to-ghcr)
+
+
+## Appendix
+
+### 手動手順
 
 1. Personal Access Token(PAT)の発行
    1. 「1. GitHub で、任意のページの右上隅にある自分のプロフィール写真をクリックしてから、 [設定] をクリック」
@@ -33,7 +60,8 @@
 Ref:
 - [GitHub Container Registry(ghcr)でコンテナイメージを管理する](https://qiita.com/Jazuma/items/aca397e081a7825d0dec)
 
-## GitHub Actions
+
+### GitHub Actions
 
 手動で Docker image を push すると，GitHub の Packages の画面に Docker リポジトリの管理画面が表示されるようになるので，下記を実施する．
 1. デフォルトだと Private なので，Public 公開に変更しておく（今回は見られて困らないデータのため，制限のない Public にした方がよい）
@@ -48,24 +76,12 @@ docker push ghcr.io/admiswalker/raspios_full_arm64_2022-04-04_bullseye:2024-08-1
 denied: installation not allowed to Write organization package
 ```
 
-## 
+## Check the Docker image existence
 
-```
-IMAGE_NAME="ghcr.io/admiswalker/raspios_full_arm64_2022-04-04_bullseye"
-IMAGE_TAG="2024-08-12-update-tmp"
-docker manifest inspect $IMAGE_NAME:$IMAGE_TAG > /dev/null ; echo $?
-```
-
-```
+```bash
 IMAGE_NAME="ghcr.io/admiswalker/raspios_full_arm64_2022-04-04_bullseye"
 IMAGE_TAG="orig"
 docker manifest inspect $IMAGE_NAME:$IMAGE_TAG > /dev/null; echo $?
 ```
 
 - [docker remote repository に image があるか確認する](https://sumito.jp/2023/02/02/docker-remote-repository-%E3%81%AB-image-%E3%81%8C%E3%81%82%E3%82%8B%E3%81%8B%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B/)
-
-Ref:
-- [Publishing Docker images](https://docs.github.com/ja/actions/use-cases-and-examples/publishing-packages/publishing-docker-images#publishing-images-to-github-packages)
-- [GitHub Action で GHCR へのコンテナー イメージの Push が成功しない (permission_denied: write_package)](https://blog.yukirii.dev/github-action-ghcr-push-error/)
-- [GitHub Container Registry に自作の Docker イメージを公開する](https://zenn.dev/515hikaru/articles/migrate-to-ghcr)
-

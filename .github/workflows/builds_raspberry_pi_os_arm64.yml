@@ -3,8 +3,8 @@ name: Build Raspberry Pi Docker (arm64)
 on:
   push:
     branches: [ main, dev, develop ]
-#    tags:
-#      - "raspios-arm64-*"
+    tags:
+      - "build-raspios-arm64-*"
 #  pull_request:
 #    branches: [ main, dev, develop ]
 
@@ -39,12 +39,14 @@ jobs:
       - name: Set parameters
         run: |
           REPOSITORY_NAME=${{ env.GHCR_USERNAME }}
-          VERSION=$(date +'%Y-%m-%d')"-update-tmp"
+          #VERSION=$(date +'%Y-%m-%d')"-update"
+          GIT_COMMIT_TAG=${{ github.ref_name }}
+          VERSION=$(echo ${GIT_COMMIT_TAG} | awk -F _ '{ print $2 }')
 
           echo "REPOSITORY_NAME=${REPOSITORY_NAME}" >> $GITHUB_ENV
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           
-      - name: Check the docker base image existance
+      - name: Check the docker base image existence
         continue-on-error: true # Not to spot at "docker manifest inspect ${URI}:${TAG} 2>/dev/null" if there is No image
         run: |
           BASE_IMAGE_EXISTANCE=1
