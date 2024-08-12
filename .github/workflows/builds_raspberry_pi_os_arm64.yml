@@ -46,7 +46,7 @@ jobs:
           
       - name: Check the docker base image existance
         run: |
-          URI=${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}
+          URI=${{ env.REGISTRY }}/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}
           TAG="orig"
           echo "target uri: "${URI}:${TAG}
           docker manifest inspect ${URI}:${TAG} > /dev/null;
