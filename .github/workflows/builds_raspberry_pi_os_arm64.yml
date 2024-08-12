@@ -48,6 +48,7 @@ jobs:
         continue-on-error: true # Not to spot at "docker manifest inspect ${URI}:${TAG} 2>/dev/null" if there is No image
         run: |
           BASE_IMAGE_EXISTANCE=1
+          echo "BASE_IMAGE_EXISTANCE=${BASE_IMAGE_EXISTANCE}" >> $GITHUB_ENV
 
           URI=${{ env.REGISTRY }}/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}
           TAG="orig"
@@ -97,7 +98,7 @@ jobs:
           fi
           
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v3
 
       - name: Build Docker Image (Update)
         run: |
