@@ -49,9 +49,6 @@ jobs:
           IMAGE_NAME=${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}:
           IMAGE_TAG="orig"
           docker manifest inspect $IMAGE_NAME:$IMAGE_TAG > /dev/null;
-          BASE_IMAGE_EXISTANCE=$? # 0: exist, 1: Not exist
-          
-          echo "BASE_IMAGE_EXISTANCE=${BASE_IMAGE_EXISTANCE}" >> $GITHUB_ENV
           
       - name: Check parameters
         run: |
