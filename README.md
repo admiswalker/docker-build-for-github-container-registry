@@ -30,6 +30,12 @@ Note:
   git push origin --delete ${BUILD_TAG}
   ```
 
+## Outputs
+
+| Repository | workflow | URLs |
+| --- | --- | --- |
+| raspios_full_arm64_2022-04-04_bullseye | [builds_raspberry_pi_os_arm64](.github/workflows/builds_raspberry_pi_os_arm64.yml) | - [Base Image](https://downloads.raspberrypi.org/raspios_full_arm64/)<br>- [GitHub Container Repository](https://github.com/admiswalker/docker-build-for-github-container-registry/pkgs/container/raspios_full_arm64_2022-04-04_bullseye) |
+
 ## Ref
 
 - [Publishing Docker images](https://docs.github.com/ja/actions/use-cases-and-examples/publishing-packages/publishing-docker-images#publishing-images-to-github-packages)
