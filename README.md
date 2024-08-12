@@ -48,10 +48,21 @@ docker push ghcr.io/admiswalker/raspios_full_arm64_2022-04-04_bullseye:2024-08-1
 denied: installation not allowed to Write organization package
 ```
 
+## 
 
+```
 IMAGE_NAME="ghcr.io/admiswalker/raspios_full_arm64_2022-04-04_bullseye"
 IMAGE_TAG="2024-08-12-update-tmp"
 docker manifest inspect $IMAGE_NAME:$IMAGE_TAG > /dev/null ; echo $?
+```
+
+```
+IMAGE_NAME="ghcr.io/admiswalker/raspios_full_arm64_2022-04-04_bullseye"
+IMAGE_TAG="orig"
+docker manifest inspect $IMAGE_NAME:$IMAGE_TAG > /dev/null; echo $?
+```
+
+- [docker remote repository に image があるか確認する](https://sumito.jp/2023/02/02/docker-remote-repository-%E3%81%AB-image-%E3%81%8C%E3%81%82%E3%82%8B%E3%81%8B%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B/)
 
 Ref:
 - [Publishing Docker images](https://docs.github.com/ja/actions/use-cases-and-examples/publishing-packages/publishing-docker-images#publishing-images-to-github-packages)

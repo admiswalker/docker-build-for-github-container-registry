@@ -49,7 +49,7 @@ jobs:
           URI=${{ env.REGISTRY }}/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}
           TAG="orig"
           echo "target uri: "${URI}:${TAG}
-          docker manifest inspect ${URI}:${TAG} > /dev/null;
+          docker manifest inspect ${URI}:${TAG} 2>/dev/null
           BASE_IMAGE_EXISTANCE=$? # 0: exist, 1: Not exist
           
           echo "BASE_IMAGE_EXISTANCE=${BASE_IMAGE_EXISTANCE}" >> $GITHUB_ENV
