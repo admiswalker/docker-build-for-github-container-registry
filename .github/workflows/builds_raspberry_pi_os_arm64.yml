@@ -15,22 +15,22 @@ jobs:
     - name: checkout repository
       uses: actions/checkout@v3
     - name: Set Parameters
-      run:
-        - GHCR_USERNAME="admiswalker"
-        - REPOSITORY_NAME=${GHCR_USERNAME}
-        - VERSION=$(date +'%Y-%m-%d')"-update-tmp"
-        - TMP="./tmp/docker_build/raspberry_pi_64"
-        - 
-        - echo "GHCR_USERNAME=${GHCR_USERNAME}" >> $GITHUB_ENV
-        - echo "REPOSITORY_NAME=${GHCR_USERNAME}" >> $GITHUB_ENV
-        - echo "VERSION=${VERSION}" >> $GITHUB_ENV
-        - echo "TMP=${TMP}" >> $GITHUB_ENV
+      run: |
+        GHCR_USERNAME="admiswalker"
+        REPOSITORY_NAME=${GHCR_USERNAME}
+        VERSION=$(date +'%Y-%m-%d')"-update-tmp"
+        TMP="./tmp/docker_build/raspberry_pi_64"
+        
+        echo "GHCR_USERNAME=${GHCR_USERNAME}" >> $GITHUB_ENV
+        echo "REPOSITORY_NAME=${GHCR_USERNAME}" >> $GITHUB_ENV
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        echo "TMP=${TMP}" >> $GITHUB_ENV
     - name: Check Parameters
-      run:
-        - echo "GHCR_USERNAME: "${{ env.GHCR_USERNAME }}
-        - echo "REPOSITORY_NAME: "${{ env.REPOSITORY_NAME }}
-        - echo "VERSION: "${{ env.VERSION }}
-        - echo "TMP: "${{ env.TMP }}
+      run: |
+        echo "GHCR_USERNAME: "${{ env.GHCR_USERNAME }}
+        echo "REPOSITORY_NAME: "${{ env.REPOSITORY_NAME }}
+        echo "VERSION: "${{ env.VERSION }}
+        echo "TMP: "${{ env.TMP }}
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
       with:
@@ -38,14 +38,14 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     - name: Build Docker Image
-      run:
-        - mkdir -p ${{ env.TMP }}
-        - cd ${{ env.TMP }}
-        - 
-        - wget -nv https://downloads.raspberrypi.org/raspios_full_arm64/root.tar.xz
-        - docker image import root.tar.xz ${{ env.REPOSITORY_NAME }}/raspios_full_arm64_2022-04-04_bullseye
+      run: |
+        mkdir -p ${{ env.TMP }}
+        cd ${{ env.TMP }}
+
+        wget -nv https://downloads.raspberrypi.org/raspios_full_arm64/root.tar.xz
+        docker image import root.tar.xz ${{ env.REPOSITORY_NAME }}/raspios_full_arm64_2022-04-04_bullseye
     - name: Push Docker Image
-      run:
-        - echo ${{ env.VERSION }}
-        - docker tag ${{ env.REPOSITORY_NAME }}/raspios_full_arm64_2022-04-04_bullseye ghcr.io/${{ env.GHCR_USERNAME }}/raspios_full_arm64_2022-04-04_bullseye:${{ env.VERSION }}
-        - docker push ghcr.io/${{ env.GHCR_USERNAME }}/raspios_full_arm64_2022-04-04_bullseye:${{ env.VERSION }}
+      run: |
+        echo ${{ env.VERSION }}
+        docker tag ${{ env.REPOSITORY_NAME }}/raspios_full_arm64_2022-04-04_bullseye ghcr.io/${{ env.GHCR_USERNAME }}/raspios_full_arm64_2022-04-04_bullseye:${{ env.VERSION }}
+        docker push ghcr.io/${{ env.GHCR_USERNAME }}/raspios_full_arm64_2022-04-04_bullseye:${{ env.VERSION }}
