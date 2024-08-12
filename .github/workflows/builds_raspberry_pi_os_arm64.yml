@@ -68,10 +68,8 @@ jobs:
           echo "VERSION: "${{ env.VERSION }}
           echo "BASE_IMAGE_EXISTANCE: "${{ env.BASE_IMAGE_EXISTANCE }}
           
-      - name: Import Docker image (Orig)
+      - name: Import base Docker image (Orig)
         run: |
-          # check the existance of base docker image
-
           if [ ${{ env.BASE_IMAGE_EXISTANCE }} -eq 1 ]; then
             echo "Base image does NOT exist (Import base image)"
 
@@ -104,7 +102,7 @@ jobs:
         run: |
           echo "Target Dir: "${{ env.DOCKER_FILE_DIR }}
           cd ${{ env.DOCKER_FILE_DIR }}
-          docker build -t ${{ env.REGISTRY }}/${{ env.GHCR_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          docker build . -t ${{ env.REGISTRY }}/${{ env.GHCR_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           
       - name: Push Docker Image (Update)
         run: |
