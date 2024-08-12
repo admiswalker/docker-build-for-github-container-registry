@@ -48,7 +48,6 @@ jobs:
         run: |
           IMAGE_NAME=${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}:
           IMAGE_TAG="orig"
-          docker manifest inspect $IMAGE_NAME:$IMAGE_TAG > /dev/null;
           
       - name: Check parameters
         run: |
