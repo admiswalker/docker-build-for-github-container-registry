@@ -13,6 +13,7 @@ env:
   IMAGE_NAME: raspios_full_arm64_2022-04-04_bullseye # ${{ github.repository }}
   GHCR_USERNAME: admiswalker
   TMP: ./tmp/docker_build/raspberry_pi_64
+  DOCKER_FILE_DIR: ./docker/raspberry_pi_64/
 
 jobs:
   build:
@@ -25,26 +26,9 @@ jobs:
       id-token: write
       
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
         
-      - name: Set Parameters
-        run: |
-          REPOSITORY_NAME=${{ env.GHCR_USERNAME }}
-          VERSION=$(date +'%Y-%m-%d')"-update-tmp"
-          
-          echo "REPOSITORY_NAME=${REPOSITORY_NAME}" >> $GITHUB_ENV
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          
-      - name: Check Parameters
-        run: |
-          echo "REGISTRY: "${{ env.REGISTRY }}
-          echo "IMAGE_NAME: "${{ env.IMAGE_NAME }}
-          echo "GHCR_USERNAME: "${{ env.GHCR_USERNAME }}
-          echo "TMP: "${{ env.TMP }}
-          echo "REPOSITORY_NAME: "${{ env.REPOSITORY_NAME }}
-          echo "VERSION: "${{ env.VERSION }}
-          
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -52,17 +36,68 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Build Docker Image
+      - name: Set parameters
         run: |
-          mkdir -p ${{ env.TMP }}
-          cd ${{ env.TMP }}
-  
-          wget -nv https://downloads.raspberrypi.org/raspios_full_arm64/root.tar.xz
-          docker image import root.tar.xz ${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}
+          REPOSITORY_NAME=${{ env.GHCR_USERNAME }}
+          VERSION=$(date +'%Y-%m-%d')"-update-tmp"
+
+          IMAGE_NAME=${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}:
+          IMAGE_TAG="orig"
+          docker manifest inspect $IMAGE_NAME:$IMAGE_TAG > /dev/null;
+          BASE_IMAGE_EXISTANCE=$? # 0: exist, 1: Not exist
           
-      - name: Push Docker Image
+          echo "REPOSITORY_NAME=${REPOSITORY_NAME}" >> $GITHUB_ENV
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "BASE_IMAGE_EXISTANCE=${BASE_IMAGE_EXISTANCE}" >> $GITHUB_ENV
+          
+      - name: Check parameters
         run: |
-          echo ${{ env.VERSION }}
-          docker tag ${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }} ${{ env.REGISTRY }}/${{ env.GHCR_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-          docker push ${{ env.REGISTRY }}/${{ env.GHCR_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          echo "REGISTRY: "${{ env.REGISTRY }}
+          echo "IMAGE_NAME: "${{ env.IMAGE_NAME }}
+          echo "GHCR_USERNAME: "${{ env.GHCR_USERNAME }}
+          echo "TMP: "${{ env.TMP }}
+          echo "REPOSITORY_NAME: "${{ env.REPOSITORY_NAME }}
+          echo "VERSION: "${{ env.VERSION }}
+          echo "BASE_IMAGE_EXISTANCE: "${{ env.BASE_IMAGE_EXISTANCE }}
+          
+      - name: Import Docker image (Orig)
+        run: |
+          # check the existance of base docker image
+
+          if [ ${{ env.BASE_IMAGE_EXISTANCE }} -eq 1 ]; then
+            echo "Base image does NOT exist (Import base image)"
+
+            mkdir -p ${{ env.TMP }}
+            cd ${{ env.TMP }}
   
+            wget -nv https://downloads.raspberrypi.org/raspios_full_arm64/root.tar.xz
+            docker image import root.tar.xz ${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}:orig
+
+          else
+            echo "Base image exists (Pass)"
+          fi
+          
+      - name: Push base Docker image (Orig)
+        run: |
+          if [ ${{ env.BASE_IMAGE_EXISTANCE }} -eq 1 ]; then
+            echo "Base image does NOT exist (Push base image)"
+
+            docker tag ${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}:orig ${{ env.REGISTRY }}/${{ env.GHCR_USERNAME }}/${{ env.IMAGE_NAME }}:orig
+            docker push ${{ env.REGISTRY }}/${{ env.GHCR_USERNAME }}/${{ env.IMAGE_NAME }}:orig
+
+          else
+            echo "Base image exists (Pass)"
+          fi
+          
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Build Docker Image (Update)
+        run: |
+          cd ${{ env.DOCKER_FILE_DIR }}
+          docker build -t ${{ env.REGISTRY }}/${{ env.GHCR_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          
+      - name: Push Docker Image (Update)
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.GHCR_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+
