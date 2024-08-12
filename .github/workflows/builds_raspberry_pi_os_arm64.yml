@@ -19,8 +19,11 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     
-    permissions: write-all
-
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
       
     steps:
       - name: Checkout repository
@@ -45,6 +48,7 @@ jobs:
         run: |
           URI=${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}
           TAG="orig"
+          echo "target uri: "${URI}:${TAG}
           docker manifest inspect ${URI}:${TAG} > /dev/null;
           BASE_IMAGE_EXISTANCE=$? # 0: exist, 1: Not exist
           
