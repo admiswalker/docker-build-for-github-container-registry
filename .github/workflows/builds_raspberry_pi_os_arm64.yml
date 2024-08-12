@@ -1,0 +1,39 @@
+name: Tests on Alpine
+
+on:
+  push:
+    branches: [ main, dev, develop ]
+#    tags:
+#      - "raspios-arm64-*"
+  pull_request:
+    branches: [ main, dev, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v3
+    - name: Login to GitHub Container Registry
+      run: |
+    - name: Build Docker Image
+      run: |
+        GHCR_USERNAME=admiswalker
+        REPOSITORY_NAME=${GHCR_USERNAME}
+        
+        TMP="./tmp/docker_build/raspberry_pi_64"
+        mkdir -p ${TMP}
+        cd ${TMP}
+
+        echo "GHCR_USERNAME: "${GHCR_USERNAME}
+        echo "REPOSITORY_NAME: "${REPOSITORY_NAME}
+        echo "TMP: "${TMP}
+        
+        wget https://downloads.raspberrypi.org/raspios_full_arm64/root.tar.xz
+        docker image import root.tar.xz ${REPOSITORY_NAME}/raspios_full_arm64_2022-04-04_bullseye
+    - name: Push Docker Image
+      run: |
+        VERSION=$(date +'%Y-%m-%d')"-update-tmp"
+        echo ${VERSION}
+        docker tag ${REPOSITORY_NAME}/raspios_full_arm64_2022-04-04_bullseye ghcr.io/${GHCR_USERNAME}/raspios_full_arm64_2022-04-04_bullseye:${VERSION}
+        docker push ghcr.io/${GHCR_USERNAME}/raspios_full_arm64_2022-04-04_bullseye:${VERSION}

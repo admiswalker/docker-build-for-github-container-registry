@@ -30,7 +30,13 @@
    docker push ghcr.io/${GHCR_USERNAME}/raspios_full_arm64_2022-04-04_bullseye:2024-08-12-update
    ```
 
-# Ref
-
+Ref:
 - [GitHub Container Registry(ghcr)でコンテナイメージを管理する](https://qiita.com/Jazuma/items/aca397e081a7825d0dec)
+
+## GitHub Actions
+
+
+
+Ref:
+- [GitHub Container Registry に自作の Docker イメージを公開する](https://zenn.dev/515hikaru/articles/migrate-to-ghcr)
 
