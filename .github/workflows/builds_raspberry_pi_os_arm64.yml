@@ -41,13 +41,16 @@ jobs:
           REPOSITORY_NAME=${{ env.GHCR_USERNAME }}
           VERSION=$(date +'%Y-%m-%d')"-update-tmp"
 
+          echo "REPOSITORY_NAME=${REPOSITORY_NAME}" >> $GITHUB_ENV
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          
+      - name: Check the docker base image existance
+        run: |
           IMAGE_NAME=${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}:
           IMAGE_TAG="orig"
           docker manifest inspect $IMAGE_NAME:$IMAGE_TAG > /dev/null;
           BASE_IMAGE_EXISTANCE=$? # 0: exist, 1: Not exist
           
-          echo "REPOSITORY_NAME=${REPOSITORY_NAME}" >> $GITHUB_ENV
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "BASE_IMAGE_EXISTANCE=${BASE_IMAGE_EXISTANCE}" >> $GITHUB_ENV
           
       - name: Check parameters
@@ -62,6 +65,8 @@ jobs:
           
       - name: Import Docker image (Orig)
         run: |
+          # check the existance of base docker image
+
           if [ ${{ env.BASE_IMAGE_EXISTANCE }} -eq 1 ]; then
             echo "Base image does NOT exist (Import base image)"
 
