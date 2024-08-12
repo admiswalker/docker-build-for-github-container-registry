@@ -9,15 +9,26 @@ Tag format: `build-raspios-arm64-*`
 ```bash
 BUILD_TAG="build-raspios-arm64_"$(date +'%Y-%m-%d')"-update"
 echo ${BUILD_TAG}
-git tag -a ${BUILD_TAG} -m ${BUILD_TAG} [CommitHash]
+COMMIT_HASH=xxx
+git tag -a ${BUILD_TAG} -m ${BUILD_TAG} ${COMMIT_HASH}
 git push origin ${BUILD_TAG}
 ```
 
-Note: In a GitHub Actions, the version tag is extracted by the following process:
-```bash
-VERSION=$(echo ${BUILD_TAG} | awk -F _ '{ print $2 }')
-echo ${VERSION}
-```
+Note:
+- In a GitHub Actions, the version tag is extracted by the following process:
+  ```bash
+  VERSION=$(echo ${BUILD_TAG} | awk -F _ '{ print $2 }')
+  echo ${VERSION}
+  ```
+- Delete local tag
+  ```bash
+  git tag -d ${BUILD_TAG}
+  ```
+- Delete remote tag
+  ```bash
+  git ls-remote --tags
+  git push origin --delete ${BUILD_TAG}
+  ```
 
 ## Ref
 

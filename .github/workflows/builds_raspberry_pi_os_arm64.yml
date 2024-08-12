@@ -4,7 +4,7 @@ on:
   push:
 #    branches: [ main, dev, develop ]
     tags:
-      - "build-raspios-arm64-*"
+      - "build-raspios-arm64_*"
 #  pull_request:
 #    branches: [ main, dev, develop ]
 
