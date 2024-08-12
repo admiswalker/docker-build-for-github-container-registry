@@ -45,15 +45,17 @@ jobs:
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           
       - name: Check the docker base image existance
-        continue-on-error: true # Not to spot at "docker manifest inspect ${URI}:${TAG} 2>/dev/null", if there is No image.
+        continue-on-error: true # Not to spot at "docker manifest inspect ${URI}:${TAG} 2>/dev/null" if there is No image
         run: |
+          BASE_IMAGE_EXISTANCE=1
+
           URI=${{ env.REGISTRY }}/${{ env.REPOSITORY_NAME }}/${{ env.IMAGE_NAME }}
           TAG="orig"
           echo "target uri: "${URI}:${TAG}
           docker manifest inspect ${URI}:${TAG} 2>/dev/null
           BASE_IMAGE_EXISTANCE=$? # 0: exist, 1: Not exist
           
-          echo "BASE_IMAGE_EXISTANCE=${BASE_IMAGE_EXISTANCE}" >> $GITHUB_ENV
+          echo "BASE_IMAGE_EXISTANCE=${BASE_IMAGE_EXISTANCE}" >> $GITHUB_ENV # This line will be skipped if there is No image
           
       - name: Check parameters
         run: |
@@ -99,6 +101,7 @@ jobs:
 
       - name: Build Docker Image (Update)
         run: |
+          echo "Target Dir: "${{ env.DOCKER_FILE_DIR }}
           cd ${{ env.DOCKER_FILE_DIR }}
           docker build -t ${{ env.REGISTRY }}/${{ env.GHCR_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           
